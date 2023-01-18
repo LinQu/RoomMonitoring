@@ -1,0 +1,259 @@
+{% extends "base.html" %} {% block title %} Ruangan {% endblock %} {% block
+active %} active {% endblock %} {% block content %}
+<br />
+<br />
+<section class="content">
+  <div class="container-fluid-xl">
+    <div class="">
+      <div class="text-center fw-bold fs-2 text-light">Daftar Ruangan</div>
+      <div class="row justify-content-start">
+        
+        <!-- button tambah -->
+        {% if user.role == 1 %}
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-success"
+            data-toggle="modal"
+            data-target="#tambahRuangan"
+          >
+            Tambah
+          </button>
+        </div>
+        {% endif %}
+        <div class="col-6"></div>
+
+      </div>
+      <div class="row d-flex mt-3 ml-3 mr-3">
+        {% for ruangan in result %}
+        <div class="col-sm-12 mt-4 card mr-3 border border-4" id="ruang{{ruangan.location_id}}" style="width: 16rem">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{ ruangan.location_name }}</h5>
+            <h6 class="card-link text-muted">
+              {% for sor in sensor%} {% endfor %} {% for sor in sensor%} {% if
+              sor.location_id == ruangan.location_id %} {% if sor.location_id ==
+              ruangan.location_id %} {{ sor.sensor_name }} {% endif %}
+              <div class="progress mb-2">
+                <div
+                  class="progress-bar bg-success progress-bar-striped progress-bar-animated {{ sor.sensor_name }}"
+                  id="progress{{ ruangan.location_id }}{{ sor.sensor_name }}"
+                  role="progressbar"
+                  aria-valuenow="10"
+                  aria-valuemin="{{ sor.reference_min }}"
+                  aria-valuemax="{{ sor.reference_max }}"
+                ></div>
+              </div>
+              {% endif %} {% endfor %}
+            </h6>
+
+            <div class="d-flex justify-content-center">
+              <a
+                href="/Ruangan/{{ ruangan.location_id }}"
+                class="btn btn-primary"
+                >Detail</a
+              >
+              {% if user.role == 1 %}
+              <a
+                data-nama="{{ ruangan.location_name }}"
+                data-id="{{ruangan.location_id}}"
+                class="btn btn-warning ml-2 btn-edit"
+                >Ubah</a
+              >
+              <a
+                data-id="{{ruangan.location_id}}"
+                class="btn btn-delete btn-danger ml-2"
+                >Hapus</a
+              >
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <!-- Modal Delete Product-->
+  <form action="/Ruangan/HapusRuangan" method="post">
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Hapus Ruangan</h5>
+            <button
+              type="button"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h4>Yakin ingin menghapus data Ruangan?</h4>
+            <input type="hidden" name="id" class="id" required />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Tidak
+            </button>
+            <button type="submit" class="btn btn-primary">Ya</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- modal edit data -->
+  <div id="ubahRuangan" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="/Ruangan/UbahRuangan" method="POST">
+          <div class="modal-header">
+            <h4 class="modal-title">Ubah Ruangan</h4>
+            <button
+              type="button"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-hidden="true"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <input type="hidden" class="id" name="id" />
+              <label class="col-sm-6 col-form-label">Nama Ruangan</label>
+              <div class="col-sm-12">
+                <input
+                  type="text"
+                  class="form-control nama"
+                  name="nama"
+                  placeholder="Nama Ruangan"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input
+              type="button"
+              class="btn btn-default"
+              data-bs-dismiss="modal"
+              value="Batal"
+            />
+            <input
+              type="submit"
+              class="btn btn-success"
+              value="Simpan"
+              name="save"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- modal add data -->
+  <div id="tambahRuangan" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="/Ruangan/TambahRuangan" enctype=multipart/form-data method="POST">
+          <div class="modal-header">
+            <h4 class="modal-title">Tambah Ruangan</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label">Nama Ruangan</label>
+              <div class="col-sm-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nama"
+                  placeholder="Nama Ruangan"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-6 col-form-label">Video Ruangan</label>
+              <div class="col-sm-12">
+                <input
+                  type="file"
+                  class="form-control"
+                  name="video"
+                  id="video"
+                  onchange="valvideo()"
+                  placeholder="Nama Ruangan"
+                  multiple accept="video/*"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input
+              type="button"
+              class="btn btn-default"
+              data-dismiss="modal"
+              value="Batal"
+            />
+            <input
+              type="submit"
+              class="btn btn-success"
+              value="Simpan"
+              name="save"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // get Delete Product
+    $(".btn-delete").on("click", function () {
+      // get data from button delete
+      const id = $(this).data("id");
+      // Set data to Form Edit
+      $(".id").val(id);
+      // Call Modal Edit
+      $("#deleteModal").modal("show");
+    });
+
+    // get Edit Product
+    $(".btn-edit").on("click", function () {
+      // get data from button edit
+      const nama = $(this).data("nama");
+      const id = $(this).data("id");
+
+      // Set data to Form Edit
+
+      $(".nama").val(nama);
+      $(".id").val(id);
+
+      console.log(nama);
+
+      // Call Modal Edit
+      $("#ubahRuangan").modal("show");
+    });
+  });
+</script>
+{% endblock %}

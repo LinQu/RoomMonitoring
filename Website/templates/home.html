@@ -1,0 +1,50 @@
+{% extends "base.html" %} {% block title %} Dashboard {% endblock %} {% block
+content %}
+<br />
+<br />
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Column -->
+      <div class="col-lg-8 col-md-7">
+        <div class="card">
+          <div class="card-block">
+            <div class="row">
+              <div class="col-12">
+                <div class="d-flex flex-wrap">
+                  <di class="mt-3 ms-3">
+                    <h3 class="card-title">Data Ruangan</h3>
+                    <h6 class="card-subtitle">5 Data Ruangan yang paling tinggi</h6>
+                  </div>
+                  <div class="ml-auto"></div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card-body">
+                  <table id="myTableTop" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nama Ruangan</th>
+                        <th>Status</th>
+                        
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="top5home">
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
+<script>
+
+</script>
+{% endblock %}

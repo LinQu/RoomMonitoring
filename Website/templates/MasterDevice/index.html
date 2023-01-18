@@ -1,0 +1,305 @@
+{% extends "base.html" %} {% block title %} Device {% endblock %} {% block
+content %}
+
+<section class="content">
+  <div class="container-fluid">
+    <br /><br />
+    <div class="card w-100">
+      <div class="card-header">
+        <h3 class="card-title">Daftar Alat</h3>
+        <a
+          data-bs-target="#tambahDevice"
+          role="button"
+          data-bs-toggle="modal"
+          class="btn btn-primary"
+        >
+          Tambah
+        </a>
+        <div class="card-body">
+          <table
+            id="myTable"
+            width="100%"
+            class="table table-bordered table-striped"
+          >
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Alat</th>
+                <th>Lokasi Ruangan</th>
+                <th>Sensor</th>
+                <th>Gambar</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for device in result %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ device[1] }}</td>
+                <td>{{ device[2] }}</td>
+                <td>{{ device[3] }}</td>
+                <td><img src="/static/image/{{ device[4]}}" width="50%" alt=""></td>
+                <!-- <td>{{ device[3]}}</td> -->
+                <!-- if status 1 aktif 2 tidak aktif -->
+                {% if device[8] == 1 %}
+                <td><span class="badge bg-success">Aktif</span></td>
+                {% else %}
+                <td><span class="badge bg-secondary">Tidak Aktif</span></td>
+                {% endif %}
+                <td>
+                  <a
+                    data-id="{{ device[5] }}"
+                    data-nama="{{ device[1] }}"
+                    data-lokasi="{{ device[6] }}"
+                    data-gambar="{{ device[4] }}"
+                    class="btn btn-edit btn-primary"
+                    >Ubah</a
+                  >
+                  <a
+                    data-nama="{{ device[0] }}"
+                    class="btn btn-delete btn-danger"
+                    >Hapus</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Modal Delete Product-->
+      <form action="/Device/HapusDevice" method="post">
+        <div
+          class="modal fade"
+          id="deleteModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Hapus Alat
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <h4>Yakin ingin menghapus data Alat?</h4>
+                <input type="hidden" name="id" class="nama" required />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Tidak
+                </button>
+                <button type="submit" class="btn btn-primary">Ya</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- modal edit akun -->
+      <div
+        class="modal fade"
+        id="editDevice"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ubah Alat</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form action="/Device/UbahDevice" enctype="multipart/form-data" method="post">
+                <div class="mb-3">
+                  <input type="hidden" class="id" name="id" />
+                  <input type="hidden" class="path" name="tempimage" />
+                  <label for="nama" class="form-label">Nama Alat</label>
+                  <input
+                    type="text"
+                    class="form-control nama"
+                    id="nama"
+                    maxlength="37"
+                    name="nama"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="lokasi" class="form-label">Lokasi</label>
+                  <select class="form-select lokasi1" id="lokasi1" name="lokasi1">
+                    <option disabled selected>Pilih Lokasi</option>
+                    {% for ruang in lokasi %}
+                    <option value="{{ruang[0]}}">{{ruang[1]}}</option>
+                    {% endfor %}
+                  </select>
+                  
+                </div>
+                <div class="mb-3">
+                  
+                  <label for="gambar" class="form-label">Gambar</label>
+                  <input
+                    type="file"
+                    class="form-control gambar1"
+                    id="gambar1"
+                    name="gambar1"
+                  />
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary">Ubah</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- modal add data -->
+      <div id="tambahDevice" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="/Device/TambahDevice" enctype=multipart/form-data method="POST">
+              <div class="modal-header">
+                <h4 class="modal-title">Tambah Alat</h4>
+                <button
+                  type="button"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-hidden="true"
+                >
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Nama Alat</label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="nama"
+                      maxlength="37"
+                      placeholder="Nama Alat"
+                    />
+                  </div>
+                  <label class="col-sm-3 col-form-label">Lokasi</label>
+                  <div class="col-sm-12">
+                    <select class="form-select" name="lokasi">
+                      <option disabled selected>Pilih Lokasi</option>
+                      {% for ruang in lokasi %}
+                      <option value="{{ruang[0]}}">{{ruang[1]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <!-- pilih role -->
+                  <label class="col-sm-3 col-form-label">Sensor</label>
+                  <div class="col-sm-12">
+                    <select class="form-select" name="sensor">
+                      <option disabled selected>Pilih Sensor</option>
+                      {% for sor in sensor %}
+                      <option value="{{sor[0]}}">{{sor[1]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Gambar</label>
+                  <div class="col-sm-12">
+                    <input
+                      type="File"
+                      class="form-control"
+                      name="gambar"
+                      id="gambar"
+                      onchange="chng()"
+                      placeholder="Gambar Alat"
+                      multiple accept="image/*"
+                    />
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="modal-footer">
+                <input
+                  type="button"
+                  class="btn btn-default"
+                  data-bs-dismiss="modal"
+                  value="Batal"
+                />
+                <input
+                  type="submit"
+                  class="btn btn-success"
+                  value="Simpan"
+                  name="save"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+  // get Delete Product
+  $(".btn-delete").on("click", function () {
+    // get data from button delete
+    const nama = $(this).data("nama");
+    // Set data to Form Edit
+    $(".nama").val(nama);
+    // Call Modal Edit
+    $("#deleteModal").modal("show");
+  });
+
+  // get Edit Product
+  $(".btn-edit").on("click", function () {
+    // get data from button edit
+    const id = $(this).data("id");
+    const nama = $(this).data("nama");
+    const lokasi = $(this).data("lokasi");
+    const gambar = $(this).data("gambar");
+    
+
+    // Set data to Form Edit
+    
+    $(".nama").val(nama);
+    $(".lokasi1").val(lokasi).change();
+    $(".path").val(gambar);
+    $(".id").val(id);
+
+
+
+    console.log(lokasi);
+
+    // Call Modal Edit
+    $("#editDevice").modal("show");
+  });
+});
+</script>
+{% endblock %} { % block footer % } { % endblock % }

@@ -1,0 +1,153 @@
+{% extends "base.html" %} {% block title %} Ruangan {% endblock %} {% block
+active %} active {% endblock %} {% block content %}
+<br />
+<br />
+<!-- Modal -->
+<form action="/Device/UbahStatus" method="post">
+  <div
+    class="modal fade"
+    id="status"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4>Ubah Status</h4>
+          <input type="hidden" name="room" value="{{result.location_id}}" />
+          <input type="hidden" name="id" class="id" required />
+          <div class="row">
+            <div class="col-sm-12">
+              <select class="form-control" name="status" required>
+                <option disabled selected>Pilih Status</option>
+                <option value="1">Aktif</option>
+                <option value="2">Tidak Aktif</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<section class="content">
+  <div class="container-fluid-xl">
+    <div class="row justify-content-start">
+      <div class="col-2 card ml-2 mr-3" style="width: 40rem; height: 270px">
+        <div class="row g-0">
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{result.location_name}}</h5>
+              <ul class="list-group list-group-flush mt-3">
+                {%for item in device%}
+                <li class="list-group-item">{{item.device_description}}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <!-- if video is not none -->
+
+            {% if video != [] %}
+            <video class="w-100 mt-5" autoplay loop muted>
+              <source
+                src="/static/image/user_profiles/{{video[0].video}}"
+                type="video/mp4"
+              />
+            </video>
+            {% else %}
+            <img
+              src="\static\image\video-not-working.png"
+              alt=""
+              srcset=""
+              class="w-100 mt-5"
+              width="100%"
+            />
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col card ml-2 mr-3" style="width: 18rem">
+        <div class="card-body">
+          <h5 class="card-title">Top 5 Ruangan</h5>
+          <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+          <ul class="list-group list-group-flush mt-3" id="myList">
+            <li class="list-group-item"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4 justify-content-start">
+      {% for item in allsensor %}
+      <div class="col card ml-2 mr-3" style="width: 18rem">
+        <div class="card-body">
+          <div class="row">
+            <h5 class="col-8 card-title" style="margin-right: 8px">
+              {{item.sensor_name}}
+            </h5>
+            <!-- button switch on off -->
+            <div class="col">
+              {% for sor in sensor %} {% if sor.sensor_id == item.sensor_id %}
+              {% if user.role == 1 %}
+              <button
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#status"
+                data-id="{{sor.device_sensor_id}}"
+                data-value="{{sor.device_sensor_status}}"
+                style="margin-top: -5px"
+              >
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              {% endif %} {% endif %} {% endfor %}
+            </div>
+            <!-- <div class="col form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" {%
+              for sor in sensor %} {% if sor.sensor_id == item.sensor_id %} {%
+              if sor.device_sensor_status == 1 %} {% if item.sensor_id == "" %}
+              disabled {% endif %} checked id="{{sor.device_sensor_id}}"
+              onchange="onsensor('{{sor.device_sensor_id}}')" {% endif %} {%
+              endif %} {% endfor %} {% if user.role == 2 %} disabled {% endif %}
+              id="flexSwitchCheckChecked" />
+            </div> -->
+          </div>
+
+          {% for sor in sensor %} {% if sor.sensor_id == item.sensor_id %}
+
+          <div
+            id="chartpie{{sor.sensor_id}}{{sor.device_sensor_status}}"
+            style="width: 200px; height: 200px; margin-left: 1px"
+          ></div>
+          {% endif %} {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

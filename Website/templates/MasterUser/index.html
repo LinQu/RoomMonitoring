@@ -1,0 +1,408 @@
+{% extends "base.html" %} {% block title %} User {% endblock %} {% block content
+%}
+
+<section class="content">
+  <div class="container-fluid">
+    <br /><br />
+    <div class="card w-100">
+      <div class="card-header">
+        <h3 class="card-title">Daftar Akun</h3>
+        <a
+          data-bs-target="#tambahAkun"
+          role="button"
+          data-bs-toggle="modal"
+          class="btn btn-primary"
+        >
+          Tambah
+        </a>
+
+        <div class="card-body">
+          <table
+            id="myTable"
+            width="100%"
+            class="table table-bordered table-striped"
+          >
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>No Handphone</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in result %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <!-- if user[10] itu 1 maka admin else user -->
+                <td>
+                  {% if user[10] == 1 %} Admin {% else %} User {% endif %}
+                </td>
+                <td>{{ user[8] }}</td>
+                <td>{{ user[9] }}</td>
+
+                <td>
+                  <a
+                    data-id="{{ user[0] }}"
+                    data-username="{{ user[1] }}"
+                    data-password="{{ user[2] }}"
+                    data-role="{{ user[10] }}"
+                    data-email="{{ user[8] }}"
+                    data-nohp="{{ user [9] }}"
+                    data-nama="{{ user[3] }}"
+                    class="btn btn-edit btn-primary"
+                    >Ubah</a
+                  >
+                  <a
+                    data-username="{{ user[0] }}"
+                    class="btn btn-delete btn-danger"
+                    >Hapus</a
+                  >
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Modal Delete Product-->
+      <form action="/User/HapusUser" method="post">
+        <div
+          class="modal fade"
+          id="deleteModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Hapus Akun
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <h4>Yakin ingin menghapus data user?</h4>
+                <input type="hidden" name="id" class="username" required />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Tidak
+                </button>
+                <button type="submit" class="btn btn-primary">Ya</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- modal edit akun -->
+      <div
+        class="modal fade"
+        id="editAkun"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ubah Akun</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form action="/User/UbahUser" method="post">
+                <div class="mb-3">
+                  <input type="hidden" class="id" name="id" />
+                  
+                  <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control username"
+                    id="username"
+                    name="username"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password<span style="color: red;">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control password"
+                    id="password"
+                    name="password"
+                    minlength="8"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  
+                  <label for="nama" class="form-label">Nama<span style="color: red;">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control nama"
+                    id="nama"
+                    name="nama"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="role" class="form-label">Role<span style="color: red;">*</span></label>
+                  <select
+                    class="form-select role"
+                    name="role"
+                    aria-label="Default select example"
+                    required
+                  >
+                    <option selected>Pilih Role</option>
+                    <option value="1">Admin</option>
+                    <option value="2">User</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email<span style="color: red;">*</span></label>
+                  <input
+                    type="email"
+                    class="form-control email"
+                    id="email"
+                    name="email"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="nohp" class="form-label">No Handphone<span style="color: red;">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control nohp"
+                    id="nohp"
+                    name="nohp"
+                    maxlength="13"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary">Ubah</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- modal add data -->
+      <div id="tambahAkun" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="/User/TambahUser" method="POST">
+              <div class="modal-header">
+                <h4 class="modal-title">Tambah Akun</h4>
+                <button
+                  type="button"
+                  class="close"
+                  data-bs-dismiss="modal"
+                  aria-hidden="true"
+                >
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Username <span style="color: red;">*</span> </label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="username"
+                      placeholder="Username"
+                      required
+                    />
+                  </div>
+                  <label class="col-sm-3 col-form-label">Password<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="password"
+                      minlength="8"
+                      placeholder="Password"
+                      required
+                    />
+                  </div>
+                  <!-- pilih role -->
+                  <label class="col-sm-3 col-form-label">Role<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <select class="form-control" name="role" required>
+                      <option disabled selected>Pilih Role</option>
+                      <option value="1">Admin</option>
+                      <option value="2">User</option>
+                    </select>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Nama<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="nama"
+                      placeholder="Nama"
+                      required
+                    />
+                  </div>
+                  <label class="col-sm-3 col-form-label">Tanggal Lahir<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <div class="input-group date" id="datepicker">
+                      <input  
+                        type="date"
+                        class="form-control"
+                        name="tglahir"
+                        id="date"
+                        required
+                      />
+                      <span class="input-group-append"> </span>
+                    </div>
+                  </div>
+                  <label class="col-sm-3 col-form-label">Tempat Lahir<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="tempat_lahir"
+                      placeholder="Tempat Lahir"
+                      required
+                    />
+                  </div>
+                  <label class="col-sm-6 col-form-label">Jenis Kelamin<span style="color: red;">*</span></label>
+                  <div class="radio-inline col-sm-12">
+                    <input type="radio" name="kelamin" value="1" checked /> Laki-Laki
+                  </div>
+                  <div class="radio-inline col-sm-12">
+                    <input type="radio" name="kelamin" value="0" /> Perempuan
+                  </div>
+                  <label class="col-sm-6 col-form-label">Alamat Tinggal</label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="alamat"
+                      placeholder="Alamat Tinggal"
+                      required
+                    />
+                  </div>
+                  <label class="col-sm-3 col-form-label">Email<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <input
+                      type="email"
+                      class="form-control"
+                      name="email"
+                      placeholder="Email"
+                      required
+                    />
+                  </div>
+                  <label class="col-sm-6 col-form-label">No Handphone<span style="color: red;">*</span></label>
+                  <div class="col-sm-12">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="nohp"
+                      id="nohp"
+                      maxlength="13"
+                      placeholder="No Handphone"
+                      required
+                    />
+                    <div class="alert" ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <input
+                  type="button"
+                  class="btn btn-default"
+                  data-bs-dismiss="modal"
+                  value="Batal"
+                />
+                <input
+                  type="submit"
+                  class="btn btn-success"
+                  value="Simpan"
+                  name="save"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+  // get Delete Product
+  $(".btn-delete").on("click", function () {
+    // get data from button delete
+    const username = $(this).data("username");
+    // Set data to Form Edit
+    $(".username").val(username);
+    // Call Modal Edit
+    $("#deleteModal").modal("show");
+  });
+
+  // get Edit Product
+  $(".btn-edit").on("click", function () {
+    // get data from button edit
+    const id = $(this).data("id");
+    const username = $(this).data("username");
+    const password = $(this).data("password");
+    const nama = $(this).data("nama");
+    const email = $(this).data("email");
+    const role = $(this).data("role");
+    const nohp = $(this).data("nohp");
+    // Set data to Form Edit
+    $(".username").val(username);
+    $(".password").val(password);
+    $(".email").val(email);
+    $(".role").val(role);
+    $(".nohp").val(nohp);
+    $(".id").val(id);
+    $(".nama").val(nama);
+
+    // Call Modal Edit
+    $("#editAkun").modal("show");
+  });
+});
+</script>
+{% endblock %} { % block footer % } { % endblock % }
